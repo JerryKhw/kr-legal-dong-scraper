@@ -1,0 +1,35 @@
+name: scraping
+on:
+  schedule:
+    - cron: "0 0 */2 * *"
+jobs:
+  scraping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Make tmp directory
+        run: mkdir tmp
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "^1.20"
+
+      - name: Run Scraping
+        run: |
+          go run ./main.go
+          rm tmp/tmp.xls
+
+      - name: Pushes files
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: tmp/
+          destination-github-username: "JerryKhw"
+          destination-repository-name: "kr-legal-dong"
+          user-email: "hwjameshw@gmail.com"
+          commit-message: "update: Sync legal-dong data"
