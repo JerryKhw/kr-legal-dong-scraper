@@ -20,7 +20,7 @@ func main() {
 		Timeout: 2 * time.Minute,
 	}
 
-	url := "https://www.code.go.kr/stdcode/regCodeFileDown.do?cPage=1&pageSize=100000&chkHigh=0&chkLow=0"
+	url := "https://www.code.go.kr/stdcode/regCodeFileDown.do?cPage=1&pageSize=100000&chkHigh=0&chkLow=0&disuseAt=ALL"
 	var zipBytes []byte
 
 	zipBytes, err := retry.DoWithData(
@@ -87,10 +87,11 @@ func main() {
 	for _, row := range rows {
 		cells := row.GetCols()
 
-		if cells[2] != nil && cells[2].GetString() == "0000000000" {
+		if cells[3] != nil && cells[3].GetString() == "0000000000" {
 			si = append(si, model.Si{
-				Code: cells[0].GetString(),
-				Name: cells[1].GetString(),
+				Code:   cells[0].GetString(),
+				Name:   cells[1].GetString(),
+				Active: cells[2].GetString() == "현존",
 			})
 		}
 	}
@@ -100,10 +101,10 @@ func main() {
 	for _, row := range rows {
 		cells := row.GetCols()
 
-		if cells[2] != nil {
+		if cells[3] != nil {
 
 			for _, si := range si {
-				if si.Code == cells[2].GetString() {
+				if si.Code == cells[3].GetString() {
 					name := cells[1].GetString()
 					name = strings.ReplaceAll(name, si.Name, "")
 					name = strings.TrimSpace(name)
@@ -114,6 +115,7 @@ func main() {
 						SiName:   si.Name,
 						FullName: cells[1].GetString(),
 						Name:     name,
+						Active:   cells[2].GetString() == "현존",
 					})
 				}
 			}
@@ -128,7 +130,7 @@ func main() {
 		if cells[2] != nil {
 
 			for _, gu := range gu {
-				if gu.Code == cells[2].GetString() {
+				if gu.Code == cells[3].GetString() {
 					name := cells[1].GetString()
 					name = strings.ReplaceAll(name, gu.FullName, "")
 					name = strings.TrimSpace(name)
@@ -141,6 +143,7 @@ func main() {
 						GuName:   gu.Name,
 						FullName: cells[1].GetString(),
 						Name:     name,
+						Active:   cells[2].GetString() == "현존",
 					})
 				}
 			}
@@ -155,7 +158,7 @@ func main() {
 		if cells[2] != nil {
 
 			for _, dong := range dong {
-				if dong.Code == cells[2].GetString() {
+				if dong.Code == cells[3].GetString() {
 					name := cells[1].GetString()
 					name = strings.ReplaceAll(name, dong.FullName, "")
 					name = strings.TrimSpace(name)
@@ -170,6 +173,7 @@ func main() {
 						DongName: dong.Name,
 						FullName: cells[1].GetString(),
 						Name:     name,
+						Active:   cells[2].GetString() == "현존",
 					})
 				}
 			}

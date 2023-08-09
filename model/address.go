@@ -1,8 +1,9 @@
 package model
 
 type Si struct {
-	Code string `json:"code"`
-	Name string `json:"name"`
+	Code   string `json:"code"`
+	Name   string `json:"name"`
+	Active bool   `json:"active"`
 }
 
 type Gu struct {
@@ -11,6 +12,7 @@ type Gu struct {
 	SiName   string `json:"siName"`
 	FullName string `json:"fullName"`
 	Name     string `json:"name"`
+	Active   bool   `json:"active"`
 }
 
 type Dong struct {
@@ -21,6 +23,7 @@ type Dong struct {
 	GuName   string `json:"guName"`
 	FullName string `json:"fullName"`
 	Name     string `json:"name"`
+	Active   bool   `json:"active"`
 }
 
 type Detail struct {
@@ -33,4 +36,5 @@ type Detail struct {
 	DongName string `json:"dongName"`
 	FullName string `json:"fullName"`
 	Name     string `json:"name"`
+	Active   bool   `json:"active"`
 }
