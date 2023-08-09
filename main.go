@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/avast/retry-go/v4"
 	"github.com/shakinm/xlsReader/xls"
 )
 
@@ -19,18 +20,27 @@ func main() {
 		Timeout: 2 * time.Minute,
 	}
 
-	zipFile, err := client.Get("https://www.code.go.kr/stdcode/regCodeFileDown.do?cPage=1&pageSize=100000&chkHigh=0&chkLow=0")
-	if err != nil {
-		panic(err)
-	}
+	url := "https://www.code.go.kr/stdcode/regCodeFileDown.do?cPage=1&pageSize=100000&chkHigh=0&chkLow=0"
+	var zipBytes []byte
 
-	defer zipFile.Body.Close()
+	zipBytes, err := retry.DoWithData(
+		func() ([]byte, error) {
+			zipFile, err := client.Get(url)
+			if err != nil {
+				return nil, err
+			}
 
-	if zipFile.StatusCode != 200 {
-		panic("status code error.")
-	}
+			defer zipFile.Body.Close()
 
-	zipBytes, err := io.ReadAll(zipFile.Body)
+			zipBytes, err = io.ReadAll(zipFile.Body)
+			if err != nil {
+				return nil, err
+			}
+
+			return zipBytes, nil
+		},
+	)
+
 	if err != nil {
 		panic(err)
 	}
