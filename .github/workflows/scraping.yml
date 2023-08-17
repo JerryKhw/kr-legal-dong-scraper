@@ -34,7 +34,6 @@ jobs:
           source-directory: "tmp"
           destination-github-username: "kr-legal-dong"
           destination-repository-name: "kr-legal-dong"
-          target-directory: "data"
           user-name: "github-actions"
           user-email: "github-actions@github.com"
           commit-message: "update: Sync legal-dong data"
