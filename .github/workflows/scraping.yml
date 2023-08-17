@@ -32,8 +32,9 @@ jobs:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
           source-directory: "tmp"
-          destination-github-username: "JerryKhw"
+          destination-github-username: "kr-legal-dong"
           destination-repository-name: "kr-legal-dong"
           target-directory: "data"
-          user-email: "hwjameshw@gmail.com"
+          user-name: "github-actions"
+          user-email: "github-actions@github.com"
           commit-message: "update: Sync legal-dong data"
