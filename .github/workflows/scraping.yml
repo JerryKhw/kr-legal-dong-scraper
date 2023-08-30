@@ -1,10 +1,8 @@
 name: scraping
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 0 */2 * *"
-  push:
-    branches:
-      - main
 jobs:
   scraping:
     runs-on: ubuntu-latest

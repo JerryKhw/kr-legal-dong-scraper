@@ -2,12 +2,15 @@ package main
 
 import (
 	"archive/zip"
+	"bufio"
 	"bytes"
+	"encoding/csv"
 	"encoding/json"
 	"io"
 	"kr-legal-dong-scraper/model"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -202,5 +205,57 @@ func main() {
 	err = os.WriteFile("tmp/detail.json", detailJson, 0644)
 	if err != nil {
 		panic(err)
+	}
+
+	siCsv, err := os.Create("tmp/si.csv")
+	if err != nil {
+		panic(err)
+	}
+
+	siCsvWriter := csv.NewWriter(bufio.NewWriter(siCsv))
+	defer siCsvWriter.Flush()
+
+	siCsvWriter.Write([]string{"code", "name", "active"})
+	for _, data := range si {
+		siCsvWriter.Write([]string{data.Code, data.Name, strconv.FormatBool(data.Active)})
+	}
+
+	guCsv, err := os.Create("tmp/gu.csv")
+	if err != nil {
+		panic(err)
+	}
+
+	guCsvWriter := csv.NewWriter(bufio.NewWriter(guCsv))
+	defer guCsvWriter.Flush()
+
+	guCsvWriter.Write([]string{"code", "siCode", "siName", "fullName", "name", "active"})
+	for _, data := range gu {
+		guCsvWriter.Write([]string{data.Code, data.SiCode, data.SiName, data.FullName, data.Name, strconv.FormatBool(data.Active)})
+	}
+
+	dongCsv, err := os.Create("tmp/dong.csv")
+	if err != nil {
+		panic(err)
+	}
+
+	dongCsvWriter := csv.NewWriter(bufio.NewWriter(dongCsv))
+	defer dongCsvWriter.Flush()
+
+	dongCsvWriter.Write([]string{"code", "siCode", "siName", "guCode", "guName", "fullName", "name", "active"})
+	for _, data := range dong {
+		dongCsvWriter.Write([]string{data.Code, data.SiCode, data.SiName, data.GuCode, data.GuName, data.FullName, data.Name, strconv.FormatBool(data.Active)})
+	}
+
+	detailCsv, err := os.Create("tmp/detail.csv")
+	if err != nil {
+		panic(err)
+	}
+
+	detailCsvWriter := csv.NewWriter(bufio.NewWriter(detailCsv))
+	defer detailCsvWriter.Flush()
+
+	detailCsvWriter.Write([]string{"code", "siCode", "siName", "guCode", "guName", "dongCode", "dongName", "fullName", "name", "active"})
+	for _, data := range detail {
+		detailCsvWriter.Write([]string{data.Code, data.SiCode, data.SiName, data.GuCode, data.GuName, data.DongCode, data.DongName, data.FullName, data.Name, strconv.FormatBool(data.Active)})
 	}
 }

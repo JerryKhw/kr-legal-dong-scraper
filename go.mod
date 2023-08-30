@@ -7,7 +7,7 @@ require (
 )
 
 require (
-	github.com/avast/retry-go/v4 v4.5.0 // indirect
+	github.com/avast/retry-go/v4 v4.5.0
 	github.com/metakeule/fmtdate v1.1.2 // indirect
 	golang.org/x/text v0.12.0 // indirect
 )
